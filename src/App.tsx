@@ -1,9 +1,10 @@
 import React from "react";
+import Router from "./router";
 
 function App() {
   return (
     <div>
-      <h1>Quiz App Components</h1>
+      <Router />
     </div>
   );
 }
