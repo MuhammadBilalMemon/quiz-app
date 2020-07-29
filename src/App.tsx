@@ -1,12 +1,15 @@
 import React from "react";
 import Router from "./router";
+import { AppLayout } from "./components/Layout";
 
-function App() {
+const App: React.FC = () => {
   return (
     <div>
-      <Router />
+      <AppLayout>
+        <Router />
+      </AppLayout>
     </div>
   );
-}
+};
 
 export default App;

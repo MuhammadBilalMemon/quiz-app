@@ -1,10 +1,12 @@
 import React from "react";
 
-const HomePage = () => {
+interface Props {}
+
+const HomePage: React.FC<Props> = () => {
   return (
-    <div>
-      <h1>Main Page of Quiz Application</h1>
-    </div>
+    <>
+      <h1>Main page of Application</h1>
+    </>
   );
 };
 
