@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import QuizSelection from "../components/QuizSelection";
+import { fetchCategories } from "./../services/apiServices";
+import { TriviaCategory } from "../models/TriviaCategory";
 
-interface Props {}
+const HomePage: React.FC = () => {
+  const [categories, setCategories] = useState<TriviaCategory[]>([]);
 
-const HomePage: React.FC<Props> = () => {
+  useEffect(() => {
+    const getCategory = async () => {
+      const gotCategories = await fetchCategories();
+
+      if (gotCategories) {
+        setCategories(gotCategories);
+      }
+    };
+
+    getCategory();
+  }, []);
+
   return (
     <>
-      <h1>Main page of Application</h1>
+      <QuizSelection triviaCategories={categories} />
     </>
   );
 };
