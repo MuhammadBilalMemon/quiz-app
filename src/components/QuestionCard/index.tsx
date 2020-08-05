@@ -6,6 +6,10 @@ type Props = {
   answers: string[];
   questionNo: number;
   totalQuestions: number;
+  score: number;
+  checkAnswer: (e: any) => void;
+  selectedAnswer: any;
+  nextQuestion: any;
 };
 
 const QuestionCard: React.FC<Props> = ({
@@ -13,11 +17,30 @@ const QuestionCard: React.FC<Props> = ({
   answers,
   questionNo,
   totalQuestions,
+  score,
+  checkAnswer,
+  selectedAnswer,
+  nextQuestion,
 }) => {
+  console.log(selectedAnswer);
   return (
     <>
       <Row justify="center" align="middle">
         <Card bordered={true} style={{ minHeight: "15rem", padding: "3rem" }}>
+          <Row justify="center" align="middle">
+            <Col>
+              <Divider
+                orientation="center"
+                style={{
+                  color: "red",
+                  fontWeight: "normal",
+                  fontSize: "1.2rem",
+                }}
+              >
+                Score: {score}
+              </Divider>
+            </Col>
+          </Row>
           <Row justify="center" align="middle">
             <Col>
               <Divider
@@ -46,6 +69,8 @@ const QuestionCard: React.FC<Props> = ({
                 style={{ textAlign: "center" }}
                 buttonStyle="outline"
                 optionType="button"
+                onChange={checkAnswer}
+                disabled={selectedAnswer ? true : false}
               >
                 {answers.map((answer) => (
                   <Radio.Button key={answer} value={answer}>
@@ -58,8 +83,15 @@ const QuestionCard: React.FC<Props> = ({
           {}
           <Row justify="center" style={{ marginTop: "1rem" }}>
             <Col>
-              <Button htmlType="button" type="primary" size="middle" danger>
-                Next
+              <Button
+                htmlType="button"
+                type="primary"
+                onClick={nextQuestion}
+                disabled={!selectedAnswer ? true : false}
+                size="middle"
+                danger
+              >
+                {questionNo === totalQuestions ? "Submit" : "Next"}
               </Button>
             </Col>
           </Row>
