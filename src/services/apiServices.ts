@@ -1,9 +1,39 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
 
-import { TriviaCategory } from "../models/TriviaCategory";
-import { QuizObject } from "./../models/QuizObject";
+//Types / Interfaces
+import { TriviaCategory, Question } from "../models/Quiz_interfaces";
 
+//Utils
+import { suffleArray } from "./../Utils/index";
+
+//Fetching sorted Question from API
+export const fetchQuestions = async (
+  QuestionNumber: number,
+  difficulty: string,
+  category: number
+) => {
+  try {
+    const { data } = await http.get(
+      `${apiUrl}/api.php?amount=${QuestionNumber}&category=${category}&difficulty=${difficulty}&type=multiple`
+    );
+
+    const quiz = data.results.map((question: Question) => {
+      return {
+        ...question,
+        answers: suffleArray([
+          ...question.incorrect_answers,
+          question.correct_answer,
+        ]),
+      };
+    });
+    return quiz;
+  } catch (ex) {
+    console.log("fetch Quiz Data: ", ex);
+  }
+};
+
+//Fetching all categories from API
 export const fetchCategories = async () => {
   try {
     const {
@@ -13,20 +43,5 @@ export const fetchCategories = async () => {
     return triviacategories;
   } catch (ex) {
     console.log("fetch Category : ", ex);
-  }
-};
-
-export const fetchQuizData = async (
-  currentDifficulty: string,
-  currentCategory: number
-) => {
-  try {
-    const response = await http.get<{ results: QuizObject[] }>(
-      `${apiUrl}api.php?amount=10&category=${currentCategory}&difficulty=${currentDifficulty}&type=multiple`
-    );
-
-    return response.data.results;
-  } catch (ex) {
-    console.log("makeQuiz", ex);
   }
 };

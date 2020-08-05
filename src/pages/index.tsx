@@ -1,26 +1,63 @@
 import React, { useEffect, useState } from "react";
-import QuizSelection from "../components/QuizSelection";
-import { fetchCategories } from "./../services/apiServices";
-import { TriviaCategory } from "../models/TriviaCategory";
+// API Services
+import { fetchQuestions } from "./../services/apiServices";
 
-const HomePage: React.FC = () => {
-  const [categories, setCategories] = useState<TriviaCategory[]>([]);
+// TypeScript Interfaces
+import { SelectionType, QuestionState } from "../models/Quiz_interfaces";
+
+// Components
+import QuizSelection from "../components/QuizSelection";
+import QuestionCard from "../components/QuestionCard";
+
+const TOTAL_QUESTIONS = 10;
+
+const HomePage = () => {
+  //questions
+  const [questionOptions, setQuestionsOptions] = useState<QuestionState[]>([]);
+  //number of questions
+  const [QuestionsCount, setQuestionsCount] = useState<number>(0);
+
+  ////////////////////////////////////////////////////////////////////////////////////////
+  const [sendRequest, setSendRequest] = useState<boolean>(false);
+  const [newSelection, setNewSelection] = useState<SelectionType>({
+    numberOfQuestions: TOTAL_QUESTIONS,
+    difficulty: "",
+    category: 9,
+    categoryName: "",
+  });
 
   useEffect(() => {
-    const getCategory = async () => {
-      const gotCategories = await fetchCategories();
-
-      if (gotCategories) {
-        setCategories(gotCategories);
+    const fetchQues = async () => {
+      if (sendRequest) {
+        const fetchedData = await fetchQuestions(
+          newSelection.numberOfQuestions,
+          newSelection.difficulty,
+          newSelection.category
+        );
+        if (fetchedData) {
+          setQuestionsOptions(fetchedData);
+        }
       }
     };
 
-    getCategory();
-  }, []);
+    fetchQues();
+  }, [newSelection, sendRequest]);
 
   return (
     <>
-      <QuizSelection triviaCategories={categories} />
+      {questionOptions.length ? (
+        <QuestionCard
+          questionNo={QuestionsCount + 1}
+          question={questionOptions[QuestionsCount].question}
+          answers={questionOptions[QuestionsCount].answers}
+          totalQuestions={TOTAL_QUESTIONS}
+        />
+      ) : (
+        <QuizSelection
+          setNewSelection={setNewSelection}
+          setSendRequest={setSendRequest}
+        />
+      )}
     </>
   );
 };
