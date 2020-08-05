@@ -113,7 +113,7 @@ const QuizSelection: React.FC<selectionPropsType> = ({
             danger
             onClick={(e) => handleSubmit(e)}
           >
-            Start Quiz
+            Start Your Quiz
           </Button>
         </Col>
       </Row>
